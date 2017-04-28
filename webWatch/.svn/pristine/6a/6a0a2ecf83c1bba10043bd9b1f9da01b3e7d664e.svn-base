@@ -1,0 +1,9 @@
+package com.watch.service;
+
+import com.watch.bean.Product;
+
+/**
+ * Created by xiao-kang on 2017/2/15.
+ */
+public interface ProductService extends BaseService<Product> {
+}

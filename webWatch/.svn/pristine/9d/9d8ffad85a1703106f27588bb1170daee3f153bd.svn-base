@@ -1,0 +1,24 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+    <mapper namespace="com.watch.dao.AdminDAO">
+        <resultMap type="admin" id="adminMap">
+            <id column="a_id" property="id"/>
+            <result column="a_account" property="account"/>
+            <result column="a_password" property="password"/>
+            <result column="a_name" property="name"/>
+            <result column="a_address" property="address"/>
+            <result column="a_phone" property="phone"/>
+
+        </resultMap>
+
+    <select id="queryAll" resultMap="adminMap">
+        select * from t_admin
+    </select>
+
+    <select id="Login" parameterType="admin" resultMap="adminMap">
+        select * from t_admin where a_account=#{account} and a_password = #{password}
+    </select>
+
+</mapper>

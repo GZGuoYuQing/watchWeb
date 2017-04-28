@@ -1,0 +1,12 @@
+package com.watch.dao;
+
+import com.watch.bean.Watch;
+import org.springframework.stereotype.Repository;
+
+/**
+ * Created by xiao-kang on 2017/3/21.
+ */
+@Repository
+public interface WatchDAO extends BaseDAO<Watch> {
+
+}

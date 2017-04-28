@@ -1,0 +1,58 @@
+package com.watch.service;
+
+import com.watch.bean.Forum;
+import com.watch.bean.Type;
+import com.watch.common.bean.Pager;
+import com.watch.common.bean.Pager4EasyUI;
+import com.watch.dao.TypeDAO;
+import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
+import java.io.Serializable;
+import java.util.List;
+
+
+@Service
+public class TypeServiceImpl implements TypeService{
+
+    @Resource
+    private TypeDAO typeDAO;
+
+
+    @Override
+    public List<Type> queryAll() {
+        return typeDAO.queryAll();
+    }
+
+    @Override
+    public Type queryById(Serializable id) {
+        return typeDAO.queryById(id);
+    }
+
+    @Override
+    public void add(Type type) {
+        typeDAO.add(type);
+    }
+
+    @Override
+    public void update(Type type) {
+    typeDAO.update(type);
+    }
+
+    @Override
+    public void deleteById(Serializable id) {
+    typeDAO.deleteById(id);
+    }
+
+    @Override
+    public Pager4EasyUI<Type> queryByPagerAndCriteria(Pager4EasyUI<Type> pager, Type type) {
+        return null;
+    }
+
+    @Override
+    public Type queryByDes(String des) {
+        return typeDAO.quryByDes(des);
+    }
+
+
+}

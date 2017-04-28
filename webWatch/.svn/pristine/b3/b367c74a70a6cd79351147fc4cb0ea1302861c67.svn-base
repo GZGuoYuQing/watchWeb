@@ -1,0 +1,29 @@
+package com.watch.service;
+
+import com.watch.bean.Shose;
+import com.watch.common.bean.Pager;
+
+import java.util.List;
+
+/**
+ * Created by xiao-kang on 2017/4/11.
+ */
+public interface ShoseService extends BaseService<Shose> {
+
+    /*
+* 更新表图片
+* */
+    public void updateImg(Shose shose);
+
+    /*
+ * 批量删除
+ * */
+    public void deleteByIds(String id);
+
+    /*
+* 根据品牌查询鞋子并分页
+*
+* */
+    public List<Shose> queryByBrand(Pager pager, Shose shose);
+    public int countByBrand(Shose shose);
+}

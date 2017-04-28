@@ -1,0 +1,125 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.watch.dao.ForumDAO">
+    <resultMap type="forum" id="forumMap">
+        <id column="f_id" property="id"/>
+        <result column="f_image" property="image"/>
+        <result column="f_title" property="title"/>
+        <result column="f_des" property="des"/>
+        <result column="f_date" property="dateTime"/>
+        <result column="f_video" property="video"/>
+
+        <association property="admin" javaType="com.watch.bean.Admin">
+            <id column="a_id" property="id"/>
+            <result column="a_account" property="account"/>
+            <result column="a_password" property="password"/>
+            <result column="a_name" property="name"/>
+            <result column="a_address" property="address"/>
+            <result column="a_phone" property="phone"/>
+        </association>
+
+        <association property="type" javaType="com.watch.bean.Type">
+            <id column="t_id" property="id"/>
+            <result column="t_des" property="des"/>
+        </association>
+    </resultMap>
+
+    <!--查询所有-->
+    <select id="queryAll" resultMap="forumMap">
+        select * from t_forum
+    </select>
+
+    <!--根据ID查询-->
+    <select id="queryById" parameterType="int" resultMap="forumMap">
+        select * from t_forum f , t_admin a, t_type t where f.a_id = a.a_id and f.t_id =t.t_id and f.f_id = #{id}
+    </select>
+
+    <!--添加论坛-->
+    <insert id="add" parameterType="forum">
+        insert into t_forum (f_image, f_date, f_des, f_title, f_video, a_id, t_id)
+        values(#{image}, #{dateTime},#{des},#{title},#{video},#{admin.id}, #{type.id})
+    </insert>
+    <!--更新论坛-->
+    <update id="update" parameterType="forum">
+        update t_forum set
+        f_image = #{image}, f_date = #{dateTime},f_des = #{des},f_title = #{title},
+        f_video = #{video},a_id = #{admin.id}, t_id =#{type.id} where f_id = #{id}
+    </update>
+    <!--删除-->
+    <delete id="deleteById" parameterType="int">
+        delete from t_forum where f_id = #{id}
+    </delete>
+    <!--分页-->
+
+    <!--多条删除-->
+    <delete id="deleteByIds" parameterType="java.util.List">
+            delete from t_forum where f_id in (
+            <foreach collection="list" item="ids"  separator=",">
+                #{ids}
+            </foreach>
+        )
+    </delete>
+
+    <!--查询所有-->
+    <select id="queryByPagerAndCriteria" resultMap="forumMap">
+        select * from t_forum f ,t_admin a, t_type t where f.a_id = a.a_id and f.t_id = t.t_id
+        <if test="forum.adminId != null and forum.adminId !=''">
+            and f.a_id = #{forum.adminId}
+        </if>
+        <if test="forum.typeId != null and forum.typeId != ''">
+            and f.t_id = #{forum.typeId}
+        </if>
+        order by f.f_date Desc limit #{pager.beginIndex}, #{pager.pageSize}
+    </select>
+
+
+    <select id="countByCriteria" resultType="int" parameterType="forum">
+        select count(f.f_id) from t_forum f ,t_admin a, t_type t where f.a_id = a.a_id and f.t_id = t.t_id
+        <if test="adminId != null and adminId != ''">
+            and f.a_id = #{adminId}
+        </if>
+        <if test="typeId != null and typeId != ''">
+            and f.t_id = #{typeId}
+        </if>
+    </select>
+
+
+    <!--前台分页-->
+    <select id="queryByAll" resultMap="forumMap">
+        select * from t_forum f ,t_admin a,t_type t
+        where f.a_id = a.a_id and f.t_id = t.t_id
+        order by f.f_date Desc limit #{pager.beginIndex}, #{pager.pageSize}
+    </select>
+
+    <!--前台右边复刻名表贴查询前5条-->
+    <select id="queryByMB" resultMap="forumMap">
+        select * from t_forum f ,t_admin a,t_type t
+                where f.a_id = a.a_id and f.t_id = t.t_id and t.t_des = '复刻名表帖'
+                order by f.f_date Desc limit 0,7
+    </select>
+
+    <!--前台右边品牌文化帖查询前5条-->
+    <select id="queryByPP" resultMap="forumMap">
+        select * from t_forum f ,t_admin a,t_type t
+                where f.a_id = a.a_id and f.t_id = t.t_id and t.t_des = '品牌文化帖'
+                order by f.f_date Desc limit 0,5
+    </select>
+
+    <select id="queryByCount" resultType="int">
+      select count(f.f_id) from t_forum f ,t_admin a, t_type t where f.a_id = a.a_id and f.t_id = t.t_id
+    </select>
+
+</mapper>
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,10 @@
+package com.watch.service;
+
+import com.watch.bean.Brand;
+import com.watch.bean.Style;
+
+/**
+ * Created by xiao-kang on 2017/3/21.
+ */
+public interface StyleService extends BaseService<Style> {
+}

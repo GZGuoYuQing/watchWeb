@@ -1,0 +1,48 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.watch.dao.OriginDAO">
+    <resultMap type="origin" id="originMap">
+        <id column="o_id" property="id"/>
+        <result column="o_des" property="des"/>
+    </resultMap>
+
+    <select id="queryAll" resultMap="originMap">
+        select * from p_origin
+    </select>
+
+
+
+    <select id="queryByPagerAndCriteria" resultMap="originMap">
+        select * from p_origin limit #{pager.beginIndex}, #{pager.pageSize}
+    </select>
+
+
+    <select id="countByCriteria" resultType="int" parameterType="origin">
+        select count(o_id) from p_origin where 1 = 1
+    </select>
+
+
+    <insert id="add" parameterType="origin">
+        insert into p_origin(o_des) values(#{des})
+    </insert>
+
+
+
+    <update id="update" parameterType="origin">
+        update p_origin set o_des = #{des}  where o_id = #{id}
+    </update>
+
+    <delete id="deleteByIds" parameterType="java.util.List">
+        delete from p_origin where o_id in (
+        <foreach collection="list" item="ids"  separator=",">
+            #{ids}
+        </foreach>
+        )
+    </delete>
+
+
+
+
+</mapper>

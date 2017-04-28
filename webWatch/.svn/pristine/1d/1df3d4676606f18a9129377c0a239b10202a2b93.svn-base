@@ -1,0 +1,44 @@
+package com.watch.controller;
+
+import com.watch.bean.Material;
+import com.watch.common.bean.ComboBox4EasyUI;
+import com.watch.service.MaterialService;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Created by xiao-kang on 2017/3/21.
+ */
+
+@Controller
+@RequestMapping("/material")
+public class MaterialController {
+
+    @Resource
+    private MaterialService materialService;
+
+
+    /*
+    * 下拉列表显示所有品牌
+    * */
+    @ResponseBody
+    @RequestMapping(value = "query_material",method = RequestMethod.GET)
+    public List<ComboBox4EasyUI> material(){
+        List<Material> list = materialService.queryAll();
+        List<ComboBox4EasyUI> request = new ArrayList<ComboBox4EasyUI>();
+        for(Material material: list){
+            ComboBox4EasyUI combox = new ComboBox4EasyUI();
+            combox.setId(String.valueOf(material.getId()));
+            combox.setText(material.getDes());
+            combox.setSelected(true);
+            request.add(combox);
+        }
+        return request;
+    }
+}

@@ -1,0 +1,53 @@
+package com.watch.service;
+
+import com.watch.bean.Watch;
+import com.watch.common.bean.Pager4EasyUI;
+import com.watch.dao.WatchDAO;
+import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
+import java.io.Serializable;
+import java.util.List;
+
+/**
+ * Created by xiao-kang on 2017/3/21.
+ */
+@Service
+public class WatchServiceImpl implements WatchService {
+
+    @Resource
+    private WatchDAO watchDAO;
+
+    @Override
+    public List<Watch> queryAll() {
+        return watchDAO.queryAll();
+    }
+
+    @Override
+    public Watch queryById(Serializable id) {
+        return watchDAO.queryById(id);
+    }
+
+    @Override
+    public void add(Watch watch) {
+        watchDAO.add(watch);
+    }
+
+    @Override
+    public void update(Watch watch) {
+        watchDAO.update(watch);
+    }
+
+    @Override
+    public void deleteById(Serializable id) {
+        watchDAO.deleteById(id);
+    }
+
+    @Override
+    public Pager4EasyUI<Watch> queryByPagerAndCriteria(Pager4EasyUI<Watch> pager, Watch watch) {
+        List<Watch> products = watchDAO.queryByPagerAndCriteria(pager,watch);
+        pager.setRows(products);
+        pager.setTotal(watchDAO.countByCriteria(watch));
+        return pager;
+    }
+}

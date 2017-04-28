@@ -1,0 +1,44 @@
+package com.watch.controller;
+
+import com.watch.bean.Brand;
+import com.watch.common.bean.ComboBox4EasyUI;
+import com.watch.service.BrandService;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Created by xiao-kang on 2017/3/21.
+ */
+
+@Controller
+@RequestMapping("/brand")
+public class BrandController {
+
+    @Resource
+    private BrandService brandService;
+
+
+    /*
+    * 下拉列表显示所有品牌
+    * */
+    @ResponseBody
+    @RequestMapping(value = "query_brand",method = RequestMethod.GET)
+    public List<ComboBox4EasyUI> brand(){
+        List<Brand> list = brandService.queryAll();
+        List<ComboBox4EasyUI> request = new ArrayList<ComboBox4EasyUI>();
+        for(Brand brand: list){
+            ComboBox4EasyUI combox = new ComboBox4EasyUI();
+            combox.setId(String.valueOf(brand.getId()));
+            combox.setText(brand.getDes());
+
+            request.add(combox);
+        }
+        return request;
+    }
+}

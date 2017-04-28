@@ -1,0 +1,52 @@
+package com.watch.service;
+
+import com.watch.bean.Core;
+import com.watch.common.bean.Pager4EasyUI;
+import com.watch.dao.BrandDAO;
+import com.watch.dao.CoreDAO;
+import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
+import java.io.Serializable;
+import java.util.List;
+
+/**
+ * Created by xiao-kang on 2017/3/21.
+ */
+@Service
+public class CoreServiceImpl implements CoreService{
+
+    @Resource
+    private CoreDAO coreDAO;
+
+
+    @Override
+    public List<Core> queryAll() {
+        return coreDAO.queryAll();
+    }
+
+    @Override
+    public Core queryById(Serializable id) {
+        return null;
+    }
+
+    @Override
+    public void add(Core core) {
+
+    }
+
+    @Override
+    public void update(Core core) {
+
+    }
+
+    @Override
+    public void deleteById(Serializable id) {
+
+    }
+
+    @Override
+    public Pager4EasyUI<Core> queryByPagerAndCriteria(Pager4EasyUI<Core> pager, Core core) {
+        return null;
+    }
+}

@@ -1,0 +1,16 @@
+package com.watch.service;
+
+import com.watch.bean.Forum;
+import com.watch.bean.Type;
+import com.watch.common.bean.Pager;
+
+import java.util.List;
+
+/**
+ * Created by xiao-kang on 2017/3/21.
+ */
+public interface TypeService extends BaseService<Type> {
+    public Type queryByDes(String des);
+
+}
+

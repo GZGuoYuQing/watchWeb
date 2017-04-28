@@ -1,0 +1,28 @@
+package com.watch.dao;
+
+import com.watch.bean.Shose;
+import com.watch.bean.Watch;
+import com.watch.common.bean.Pager4EasyUI;
+import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+
+/**
+ * Created by xiao-kang on 2017/4/11.
+ */
+@Repository
+public interface ShoseDAO extends BaseDAO<Shose>{
+
+    public List<Shose> queryByPagerAndCriteria(@Param("pager") Pager4EasyUI<Shose> pager, @Param("shose") Shose shose);
+
+    /*
+   * 更新表图片
+   * */
+    public void updateImg(Shose shose);
+
+    /*
+ * 批量删除
+ * */
+    public void deleteByIds(List<String> list);
+}

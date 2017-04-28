@@ -1,0 +1,46 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.watch.dao.TypeDAO">
+    <resultMap type="type" id="typeMap">
+        <id column="t_id" property="id"/>
+        <result column="t_des" property="des"/>
+    </resultMap>
+
+    <select id="queryAll" resultMap="typeMap">
+        select * from t_type
+    </select>
+
+    <select id="queryByPagerAndCriteria" resultMap="typeMap">
+        select * from t_type limit #{pager.beginIndex}, #{pager.pageSize}
+    </select>
+
+
+    <select id="countByCriteria" resultType="int" parameterType="type">
+        select count(t_id) from t_type where 1 = 1
+    </select>
+
+
+    <insert id="add" parameterType="type">
+        insert into t_type(t_des) values(#{des})
+    </insert>
+
+
+    <update id="update" parameterType="type">
+        update t_type set t_des = #{des}  where t_id = #{id}
+    </update>
+
+    <delete id="deleteByIds" parameterType="java.util.List">
+        delete from t_type where t_id in (
+        <foreach collection="list" item="ids"  separator=",">
+            #{ids}
+        </foreach>
+        )
+    </delete>
+
+
+
+
+
+</mapper>

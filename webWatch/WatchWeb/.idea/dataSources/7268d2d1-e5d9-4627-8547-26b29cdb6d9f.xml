@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataSource name="watchdb@localhost">
+  <database-model serializer="dbm" rdbms="MYSQL" format-version="4.0">
+    <root id="1"/>
+    <schema id="2" parent="1" name="watchdb">
+      <Current>1</Current>
+      <Visible>1</Visible>
+    </schema>
+    <schema id="3" parent="1" name="information_schema"/>
+    <schema id="4" parent="1" name="mysql"/>
+    <schema id="5" parent="1" name="performance_schema"/>
+    <schema id="6" parent="1" name="sakila"/>
+    <schema id="7" parent="1" name="sys"/>
+    <schema id="8" parent="1" name="world"/>
+    <table id="9" parent="2" name="p_brand"/>
+    <table id="10" parent="2" name="p_core"/>
+    <table id="11" parent="2" name="p_material"/>
+    <table id="12" parent="2" name="p_origin"/>
+    <table id="13" parent="2" name="p_style"/>
+    <table id="14" parent="2" name="p_watch"/>
+    <table id="15" parent="2" name="t_admin"/>
+    <column id="16" parent="9" name="b_id">
+      <Position>1</Position>
+      <Comment>品牌ID</Comment>
+      <DataType>int(11)|0</DataType>
+      <NotNull>1</NotNull>
+      <SequenceIdentity>1</SequenceIdentity>
+    </column>
+    <column id="17" parent="9" name="b_des">
+      <Position>2</Position>
+      <Comment>手表品牌</Comment>
+      <DataType>varchar(255)|0</DataType>
+    </column>
+    <key id="18" parent="9" name="PRIMARY">
+      <ColNames>b_id</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <column id="19" parent="10" name="c_id">
+      <Position>1</Position>
+      <Comment>机芯ID</Comment>
+      <DataType>int(11)|0</DataType>
+      <NotNull>1</NotNull>
+      <SequenceIdentity>1</SequenceIdentity>
+    </column>
+    <column id="20" parent="10" name="c_des">
+      <Position>2</Position>
+      <Comment>机芯型号</Comment>
+      <DataType>varchar(255)|0</DataType>
+    </column>
+    <key id="21" parent="10" name="PRIMARY">
+      <ColNames>c_id</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <column id="22" parent="11" name="m_id">
+      <Position>1</Position>
+      <Comment>材质ID</Comment>
+      <DataType>int(11)|0</DataType>
+      <NotNull>1</NotNull>
+      <SequenceIdentity>1</SequenceIdentity>
+    </column>
+    <column id="23" parent="11" name="m_des">
+      <Position>2</Position>
+      <Comment>材质描述</Comment>
+      <DataType>varchar(255)|0</DataType>
+    </column>
+    <key id="24" parent="11" name="PRIMARY">
+      <ColNames>m_id</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <column id="25" parent="12" name="o_id">
+      <Position>1</Position>
+      <Comment>产地</Comment>
+      <DataType>int(11)|0</DataType>
+      <NotNull>1</NotNull>
+      <SequenceIdentity>1</SequenceIdentity>
+    </column>
+    <column id="26" parent="12" name="o_des">
+      <Position>2</Position>
+      <Comment>产地</Comment>
+      <DataType>varchar(255)|0</DataType>
+      <DefaultExpression>&apos;中国&apos;</DefaultExpression>
+    </column>
+    <key id="27" parent="12" name="PRIMARY">
+      <ColNames>o_id</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <column id="28" parent="13" name="s_id">
+      <Position>1</Position>
+      <Comment>风格ID</Comment>
+      <DataType>int(11)|0</DataType>
+      <NotNull>1</NotNull>
+      <SequenceIdentity>1</SequenceIdentity>
+    </column>
+    <column id="29" parent="13" name="s_des">
+      <Position>2</Position>
+      <Comment>风格</Comment>
+      <DataType>varchar(255)|0</DataType>
+    </column>
+    <key id="30" parent="13" name="PRIMARY">
+      <ColNames>s_id</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <column id="31" parent="14" name="w_id">
+      <Position>1</Position>
+      <Comment>手表ID</Comment>
+      <DataType>int(11)|0</DataType>
+      <NotNull>1</NotNull>
+      <SequenceIdentity>1</SequenceIdentity>
+    </column>
+    <column id="32" parent="14" name="b_id">
+      <Position>2</Position>
+      <Comment>手表品牌ID</Comment>
+      <DataType>int(11)|0</DataType>
+    </column>
+    <column id="33" parent="14" name="w_price">
+      <Position>3</Position>
+      <Comment>手表价格</Comment>
+      <DataType>double|0</DataType>
+    </column>
+    <column id="34" parent="14" name="w_type">
+      <Position>4</Position>
+      <Comment>手表款式</Comment>
+      <DataType>varchar(100)|0</DataType>
+      <DefaultExpression>&apos;男款&apos;</DefaultExpression>
+    </column>
+    <column id="35" parent="14" name="w_size">
+      <Position>5</Position>
+      <Comment>表盘大小</Comment>
+      <DataType>int(11)|0</DataType>
+    </column>
+    <column id="36" parent="14" name="w_colour">
+      <Position>6</Position>
+      <Comment>表盘颜色</Comment>
+      <DataType>varchar(100)|0</DataType>
+    </column>
+    <column id="37" parent="14" name="w_des">
+      <Position>7</Position>
+      <Comment>手表描述</Comment>
+      <DataType>varchar(600)|0</DataType>
+    </column>
+    <column id="38" parent="14" name="m_id">
+      <Position>8</Position>
+      <Comment>表壳材质ID</Comment>
+      <DataType>int(11)|0</DataType>
+    </column>
+    <column id="39" parent="14" name="w_lens">
+      <Position>9</Position>
+      <Comment>表镜材质</Comment>
+      <DataType>varchar(100)|0</DataType>
+      <DefaultExpression>&apos;蓝宝石镜面&apos;</DefaultExpression>
+    </column>
+    <column id="40" parent="14" name="w_function">
+      <Position>10</Position>
+      <Comment>手表功能</Comment>
+      <DataType>varchar(255)|0</DataType>
+    </column>
+    <column id="41" parent="14" name="c_id">
+      <Position>11</Position>
+      <Comment>手表机芯型号ID</Comment>
+      <DataType>int(11)|0</DataType>
+    </column>
+    <column id="42" parent="14" name="o_id">
+      <Position>12</Position>
+      <Comment>机芯产地</Comment>
+      <DataType>int(100)|0</DataType>
+      <DefaultExpression>&apos;1&apos;</DefaultExpression>
+    </column>
+    <column id="43" parent="14" name="w_image">
+      <Position>13</Position>
+      <Comment>手表图片路径</Comment>
+      <DataType>varchar(600)|0</DataType>
+    </column>
+    <column id="44" parent="14" name="s_id">
+      <Position>14</Position>
+      <Comment>手表风格</Comment>
+      <DataType>int(11)|0</DataType>
+    </column>
+    <column id="45" parent="14" name="w_title">
+      <Position>15</Position>
+      <Comment>手表标题</Comment>
+      <DataType>varchar(60)|0</DataType>
+    </column>
+    <key id="46" parent="14" name="PRIMARY">
+      <ColNames>w_id</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <column id="47" parent="15" name="a_id">
+      <Position>1</Position>
+      <Comment>管理员ID</Comment>
+      <DataType>int(11)|0</DataType>
+      <NotNull>1</NotNull>
+      <SequenceIdentity>1</SequenceIdentity>
+    </column>
+    <column id="48" parent="15" name="a_account">
+      <Position>2</Position>
+      <Comment>管理员账户</Comment>
+      <DataType>varchar(255)|0</DataType>
+    </column>
+    <column id="49" parent="15" name="a_password">
+      <Position>3</Position>
+      <Comment>管理员密码</Comment>
+      <DataType>varchar(255)|0</DataType>
+    </column>
+    <column id="50" parent="15" name="a_name">
+      <Position>4</Position>
+      <Comment>管理员姓名</Comment>
+      <DataType>varchar(255)|0</DataType>
+    </column>
+    <column id="51" parent="15" name="a_address">
+      <Position>5</Position>
+      <Comment>管理员地址</Comment>
+      <DataType>varchar(255)|0</DataType>
+    </column>
+    <column id="52" parent="15" name="a_phone">
+      <Position>6</Position>
+      <Comment>管理员手机号</Comment>
+      <DataType>int(11)|0</DataType>
+    </column>
+    <key id="53" parent="15" name="PRIMARY">
+      <ColNames>a_id</ColNames>
+      <Primary>1</Primary>
+    </key>
+  </database-model>
+</dataSource>

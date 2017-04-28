@@ -1,0 +1,36 @@
+package com.watch.dao;
+
+import com.watch.bean.Watch;
+import com.watch.common.bean.Pager;
+import com.watch.common.bean.Pager4EasyUI;
+import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+
+/**
+ * Created by xiao-kang on 2017/3/21.
+ */
+@Repository
+public interface WatchDAO extends BaseDAO<Watch> {
+    public List<Watch> queryByPagerAndCriteria(@Param("pager") Pager4EasyUI<Watch> pager, @Param("watch") Watch watch);
+
+    /*
+    * 批量删除
+    * */
+    public void deleteByIds(List<String> list);
+
+    /*
+    * 查询前十六条数据
+    * */
+
+    public List<Watch> queryBy12(@Param("start") int start, @Param("over") int over);
+
+    /*
+    * 根据品牌和款式查询手表并分页
+    * */
+
+    public List<Watch> queryByWatchDetails(@Param("pager")Pager pager, @Param("styleDes") String typeDes, @Param("type") String type);
+
+    public int count(@Param("styleDes") String typeDes, @Param("type") String type);
+}

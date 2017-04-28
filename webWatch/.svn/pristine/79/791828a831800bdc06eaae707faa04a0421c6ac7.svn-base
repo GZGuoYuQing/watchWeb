@@ -1,0 +1,53 @@
+package com.watch.service;
+
+import com.watch.bean.Core;
+import com.watch.bean.Origin;
+import com.watch.common.bean.Pager4EasyUI;
+import com.watch.dao.CoreDAO;
+import com.watch.dao.OriginDAO;
+import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
+import java.io.Serializable;
+import java.util.List;
+
+/**
+ * Created by xiao-kang on 2017/3/21.
+ */
+@Service
+public class OriginServiceImpl implements OriginService{
+
+    @Resource
+    private OriginDAO originDAO;
+
+
+    @Override
+    public List<Origin> queryAll() {
+        return originDAO.queryAll();
+    }
+
+    @Override
+    public Origin queryById(Serializable id) {
+        return null;
+    }
+
+    @Override
+    public void add(Origin origin) {
+
+    }
+
+    @Override
+    public void update(Origin origin) {
+
+    }
+
+    @Override
+    public void deleteById(Serializable id) {
+
+    }
+
+    @Override
+    public Pager4EasyUI<Origin> queryByPagerAndCriteria(Pager4EasyUI<Origin> pager, Origin origin) {
+        return null;
+    }
+}

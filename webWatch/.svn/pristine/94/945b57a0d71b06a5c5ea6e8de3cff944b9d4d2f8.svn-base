@@ -1,0 +1,55 @@
+package com.watch.service;
+
+import com.watch.bean.Brand;
+import com.watch.common.bean.Pager4EasyUI;
+import com.watch.dao.BrandDAO;
+import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
+import java.io.Serializable;
+import java.util.List;
+
+/**
+ * Created by xiao-kang on 2017/3/21.
+ */
+@Service
+public class BrandServiceImpl implements BrandService{
+
+    @Resource
+    private BrandDAO brandDAO;
+
+    @Override
+    public List<Brand> queryAll() {
+        return brandDAO.queryAll();
+    }
+
+    @Override
+    public Brand queryById(Serializable id) {
+        return brandDAO.queryById(id);
+    }
+
+    @Override
+    public void add(Brand brand) {
+
+    }
+
+    @Override
+    public void update(Brand brand) {
+
+    }
+
+    @Override
+    public void deleteById(Serializable id) {
+
+    }
+
+    @Override
+    public Pager4EasyUI<Brand> queryByPagerAndCriteria(Pager4EasyUI<Brand> pager, Brand brand) {
+        return null;
+    }
+
+    @Override
+    public Brand queryByDes(String des) {
+        return brandDAO.queryByDes(des);
+    }
+}

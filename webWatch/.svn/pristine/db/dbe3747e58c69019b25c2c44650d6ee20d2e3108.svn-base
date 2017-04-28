@@ -1,0 +1,225 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.watch.dao.LeatherDAO">
+    <resultMap type="leather" id="leatherMap">
+        <id column="l_id" property="id"/>
+        <result column="l_type" property="type"/>
+        <result column="l_price" property="price"/>
+        <result column="l_image" property="image"/>
+        <result column="l_title" property="title"/>
+        <result column="l_des" property="des"/>
+        <result column="l_table" property="table"/>
+        <result column="l_video" property="video"/>
+        <result column="l_image1" property="image1"/>
+        <result column="l_image2" property="image2"/>
+        <result column="l_image3" property="image3"/>
+        <result column="l_image4" property="image4"/>
+        <result column="l_image5" property="image5"/>
+        <result column="l_image6" property="image6"/>
+        <result column="l_image7" property="image7"/>
+        <result column="l_image8" property="image8"/>
+        <association property="origin" javaType="com.watch.bean.Origin">
+            <id column="o_id" property="id"/>
+            <result column="o_des" property="des"/>
+        </association>
+
+        <association property="style" javaType="com.watch.bean.Style">
+            <id column="s_id" property="id"/>
+            <result column="s_des" property="des"/>
+        </association>
+
+        <association property="material" javaType="com.watch.bean.Material">
+            <id column="m_id" property="id"/>
+            <result column="m_des" property="des"/>
+        </association>
+
+
+        <association property="brand" javaType="com.watch.bean.Brand">
+            <id column="b_id" property="id"/>
+            <result column="b_des" property="des"/>
+        </association>
+    </resultMap>
+
+    <select id="queryAll" resultMap="leatherMap">
+        select * from t_leather
+    </select>
+
+    <select id="queryById" parameterType="int" resultMap="leatherMap">
+        select * from t_leather w ,p_brand b  ,p_material m ,p_origin o ,p_style s where w.b_id = b.b_id
+     and w.m_id = m.m_id and w.o_id = o.o_id and w.s_id = s.s_id and  w.l_id = #{id}
+    </select>
+
+    <insert id="add" parameterType="leather">
+        insert into t_leather(b_id, l_price,l_type,l_des,m_id,o_id,l_image,s_id,l_title,l_image1,l_image2,
+        l_image3,l_image4,l_image5,l_image6,l_image7,l_image8,l_table,l_video)
+        values(#{brand.id}, #{price},#{type},#{des},#{material.id},
+        #{origin.id},#{image},#{style.id},#{title},#{image1},#{image2},#{image3},#{image4},#{image5},#{image6},#{image7}
+        ,#{image8},#{table},#{video})
+    </insert>
+
+
+
+    <update id="update" parameterType="leather">
+        update t_leather set b_id = #{brand.id}, l_price = #{price},l_type = #{type},l_des = #{des},
+        m_id = #{material.id},o_id = #{origin.id},
+        s_id = #{style.id},l_title = #{title}
+        ,l_table = #{table},l_video = #{video} where l_id = #{id}
+    </update>
+
+    <update id = "updateImg" parameterType="leather">
+        update t_leather set l_image = #{image},l_image1 = #{image1},l_image2 = #{image2},l_image3 = #{image3} ,l_image4 = #{image4},l_image5 = #{image5},l_image6 = #{image6},l_image7 = #{image7},l_image8 = #{image8}
+        where l_id = #{id}
+    </update>
+
+    <!--后台分页-->
+    <select id="queryByPagerAndCriteria" resultMap="leatherMap">
+        select * from t_leather w ,p_brand b ,p_material m ,p_origin o ,p_style s where w.b_id = b.b_id
+        and w.m_id = m.m_id and w.o_id = o.o_id and w.s_id = s.s_id
+        <if test="leather.brandId != null and leather.brandId != ''">
+            and w.b_id = #{leather.brandId}
+        </if>
+        <if test="leather.title != null and leather.title != ''">
+            and w.l_title like concat('%', #{leather.title}, '%')
+        </if>
+        order by w.l_id Desc limit #{pager.beginIndex}, #{pager.pageSize}
+    </select>
+
+    <select id="countByCriteria" resultType="int" parameterType="leather">
+        select count(l_id) from t_leather where 1 = 1
+        <if test="brandId != null and brandId != ''">
+            and b_id = #{brandId}
+        </if>
+        <if test="title != null and title != ''">
+            and l_title like concat('%', #{title}, '%')
+        </if>
+    </select>
+
+    <delete id="deleteByIds" parameterType="java.util.List">
+        delete from t_leather where l_id in (
+        <foreach collection="list" item="ids"  separator=",">
+            #{ids}
+        </foreach>
+        )
+
+    </delete>
+
+    <select id="queryBy12" parameterType="int" resultMap="leatherMap">
+        select * from t_leather w ,p_style s where w.s_id = s.s_id
+        order by w.l_id Desc limit #{start},#{over}
+    </select>
+
+    <select id="queryByleatherDetails"  resultMap="leatherMap">
+        select * from t_leather  w, p_style s where w.b_id in (select b_id from p_brand where b_des = #{styleDes} )
+        and w.l_type = #{type} and w.s_id = s.s_id order by w.l_id desc limit #{pager.beginIndex}, #{pager.pageSize}
+    </select>
+
+
+    <select id="count" resultType="int">
+        select count(w.l_id) from t_leather  w where w.b_id in (select b_id from p_brand where b_des = #{styleDes} ) and w.l_type = #{type}
+    </select>
+
+    <select id="queryByTitleDes" resultMap="leatherMap">
+        select * from t_leather w  LEFT JOIN p_style s  on w.s_id = s.s_id where 1 = 1
+        <if test="leather.des != null and leather.des != ''">
+            and w.l_des like concat('%', #{leather.des}, '%')
+        </if>
+        <if test="leather.title != null and leather.title != ''">
+            or w.l_title  like concat('%', #{leather.title}, '%')
+        </if>
+        <if test="leather.function != null and leather.function != ''">
+            or w.l_function like concat('%', #{leather.function}, '%')
+        </if>
+        order by w.l_id Desc limit #{pager.beginIndex}, #{pager.pageSize}
+    </select>
+
+    <select id="countByTitleDes" resultType="int" parameterType="leather">
+        select count(l_id) from t_leather where 1 = 1
+        <if test="des != null and des != ''">
+            and l_des like concat('%', #{des}, '%')
+        </if>
+        <if test="title != null and title != ''">
+            or l_title like concat('%', #{title}, '%')
+        </if>
+        <if test="function != null and function != ''">
+            or l_function like concat('%', #{function}, '%')
+        </if>
+    </select>
+
+
+
+    <select id="queryByPrice"  resultMap="leatherMap">
+        select * from t_leather w  LEFT JOIN p_brand b on w.b_id = b.b_id LEFT JOIN p_style s  on w.s_id = s.s_id where 1 = 1
+        <if test="leather.type != null and leather.type != ''">
+          and w.l_type = #{leather.type}
+        </if>
+        <if test="leather.brandId != null and leather.brandId != ''">
+            and w.b_id = #{leather.brandId}
+        </if>
+        <if test="leather.prices == 1">
+            and w.l_price <![CDATA[ <= 240 ]]>
+        </if>
+        <if test="leather.prices == 2">
+            and w.l_price <![CDATA[ >= 240 ]]> and  w.l_price <![CDATA[<= 350 ]]>
+        </if>
+        <if test="leather.prices == 3">
+            and w.l_price <![CDATA[ >= 350 ]]> and  w.l_price <![CDATA[<= 550 ]]>
+        </if>
+        <if test="leather.prices == 4">
+            and w.l_price <![CDATA[ >= 550 ]]> and  w.l_price <![CDATA[<= 950 ]]>
+        </if>
+        <if test="leather.prices == 5">
+            and w.l_price <![CDATA[ >= 950 ]]>
+        </if>
+        <if test="leather.prices == 6">
+        </if>
+        order by w.l_id Desc limit #{pager.beginIndex}, #{pager.pageSize}
+    </select>
+
+
+    <select id="countByPrice" resultType="int">
+        select count(w.l_id) from t_leather w  LEFT JOIN p_brand b on w.b_id = b.b_id LEFT JOIN p_style s  on w.s_id = s.s_id where 1 = 1
+        <if test="type != null and type != ''">
+            and w.l_type = #{type}
+        </if>
+        <if test="brandId != null and brandId != ''">
+            and w.b_id = #{brandId}
+        </if>
+        <if test="prices == 1">
+            and w.l_price <![CDATA[ <= 240 ]]>
+        </if>
+        <if test="prices == 2">
+            and w.l_price <![CDATA[ >= 240 ]]> and  w.l_price <![CDATA[<= 350 ]]>
+        </if>
+        <if test="prices == 3">
+            and w.l_price <![CDATA[ >= 350 ]]> and  w.l_price <![CDATA[<= 550 ]]>
+        </if>
+        <if test="prices == 4">
+            and w.l_price <![CDATA[ >= 550 ]]> and  w.l_price <![CDATA[<= 950 ]]>
+        </if>
+        <if test="prices == 5">
+            and w.l_price <![CDATA[ >= 950 ]]>
+        </if>
+        <if test="prices == 6">
+        </if>
+    </select>
+
+    <!--前台页面根据品牌显示-->
+    <select id="queryByBrand" resultMap="leatherMap">
+        select * from t_leather w ,p_brand b ,p_material m ,p_origin o ,p_style s where w.b_id = b.b_id
+        and w.m_id = m.m_id and w.o_id = o.o_id and w.s_id = s.s_id
+        <if test="leather.brandId != null and leather.brandId != ''">
+            and w.b_id = #{leather.brandId}
+        </if>
+        order by w.l_id Desc limit #{pager.beginIndex}, #{pager.pageSize}
+    </select>
+
+
+    <select id="countByBrand" resultType="int" parameterType="leather">
+        select count(w.l_id) from t_leather w where 1 = 1
+        <if test="brandId != null and brandId != ''">
+            and w.b_id = #{brandId}
+        </if>
+    </select>
+</mapper>

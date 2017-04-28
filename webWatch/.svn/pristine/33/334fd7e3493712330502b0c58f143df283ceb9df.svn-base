@@ -1,0 +1,215 @@
+package com.watch.controller;
+
+import ch.qos.logback.classic.Logger;
+import com.watch.bean.*;
+import com.watch.common.Constants;
+import com.watch.common.Methods;
+import com.watch.common.bean.ControllerResult;
+import com.watch.common.bean.Pager;
+import com.watch.common.bean.Pager4EasyUI;
+import com.watch.service.WatchService;
+import org.apache.ibatis.annotations.Param;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
+
+/**
+ * Created by Administrator on 2017/3/18 0018.
+ */
+@Controller
+@RequestMapping("/watch")
+public class WatchController {
+
+    private Logger logger = (Logger) LoggerFactory.getLogger(WatchController.class);
+
+    @Resource
+    private WatchService watchService;
+
+    /**
+     * 查询手表列表*/
+    @RequestMapping(value = "products/{styleDes}/{type}",method = RequestMethod.GET)
+    public ModelAndView redirectWatch(@PathVariable("styleDes")String styleDes, @PathVariable("type") String type, HttpServletRequest req) {
+        logger.info("根据品牌和款式查询手表");
+        String pageNoStr = req.getParameter("pageNo");
+        int pageNo = 1;
+        int pageSize = 5;
+        int total = watchService.count(styleDes,type);
+
+        int totalPage = (total % pageSize )== 0 ? total / pageSize :(total / pageSize +1);
+        if(pageNoStr != null){
+            try {
+                pageNo = Integer.valueOf(pageNoStr);
+                if(pageNo <= 0){
+                    pageNo = 1;
+                }else if(pageNo > totalPage){
+                    pageNo = totalPage;
+                }
+
+            }catch (NumberFormatException e){
+
+            }
+        }
+        Pager pager = new Pager(pageNo,pageSize,0);
+        List<Watch> watches = watchService.queryByWatchDetails(pager,styleDes,type);
+        ModelAndView mav = new ModelAndView("watch/products");
+        mav.addObject("watches", watches);
+        mav.addObject("pageNo", pageNo);
+        return mav;
+    }
+
+    /**
+     * 查看手表详情*/
+    @RequestMapping(value = "details",method = RequestMethod.GET)
+    public String redirectDetails(Model model) {
+        return "/watch/pro-details";
+    }
+
+
+    /**
+     * 查看论坛*/
+    @RequestMapping(value = "forum",method = RequestMethod.GET)
+    public String redirectForum(Model model) {
+        return "/watch/forum";
+    }
+
+
+    /**
+     * 查看论坛详情*/
+    @RequestMapping(value = "fontDetails",method = RequestMethod.GET)
+    public String redirectFontDetails(Model model) {
+        return "/watch/font-details";
+    }
+
+
+    /**
+     * 手表管理页面*/
+    @RequestMapping(value = "watch_page",method = RequestMethod.GET)
+    public String showWatch(Model model) {
+        return "/admin-page/watch-all";
+    }
+
+
+    @ResponseBody
+    @RequestMapping(value="query_pager",method=RequestMethod.GET)
+    public Pager4EasyUI<Watch> queryPager(@Param("page")String page, @Param("rows")String rows, @Param("brand") String brand, @Param("title") String title){
+        logger.info("分页查询所有手表");
+        Pager4EasyUI<Watch> pager = new Pager4EasyUI<Watch>();
+        pager.setPageNo(Integer.valueOf(page));
+        pager.setPageSize(Integer.valueOf(rows));
+        Watch watch = new Watch();
+        if(title != null && !title.equals("") || brand != null && !brand.equals("")){
+            watch.setTitle(title);
+            watch.setBrandId(Integer.valueOf(brand));
+        }
+        pager = watchService.queryByPagerAndCriteria(pager,watch);
+        return pager;
+    }
+
+    @ResponseBody
+    @RequestMapping(value="add_watch",method = RequestMethod.POST)
+    public ControllerResult addWatch(Watch watch,MultipartFile file){
+        logger.info("添加手表");
+        try {
+            String fileName = Methods.createName(file.getOriginalFilename());
+            String path = Methods.uploadPath("img") + fileName;
+            if(!file.isEmpty()){
+                file.transferTo(new File(path));
+                watch.setImage(Constants.UPLOAD_IMAGES + Methods.createNewFolder() + "/" + fileName);
+            }
+
+        }catch (IOException e){
+
+        }
+        getComboxId(watch);
+        watchService.add(watch);
+        return ControllerResult.getSuccessResult("添加成功");
+    }
+
+    @ResponseBody
+    @RequestMapping(value="update_watch",method = RequestMethod.POST)
+    public ControllerResult updateWatch(Watch watch,MultipartFile file,String image){
+        logger.info("更新手表");
+        try {
+            if(file != null){
+                String fileName = Methods.createName(file.getOriginalFilename());
+                String path = Methods.uploadPath("img") + fileName;
+                if(!file.isEmpty()){
+                file.transferTo(new File(path));
+                watch.setImage(Constants.UPLOAD_IMAGES + Methods.createNewFolder() + "/" + fileName);
+                }
+            }else{
+                watch.setImage(image);
+            }
+
+        }catch (IOException e){
+
+        }
+        getComboxId(watch);
+        watchService.update(watch);
+        return ControllerResult.getSuccessResult("更新成功");
+    }
+
+    @ResponseBody
+    @RequestMapping(value="deleteById",method = RequestMethod.GET)
+    public ControllerResult deleteById(@Param("ids") String ids){
+        logger.info("删除手表");
+        watchService.deleteByIds(ids);
+        return ControllerResult.getSuccessResult("删除成功");
+    }
+
+
+    /*
+    * 根据页面的comboxID设置到手表类
+    * */
+    public void getComboxId(Watch watch){
+        Core core = new Core();
+        core.setId(watch.getCore().getId());
+        Material material = new Material();
+        material.setId(watch.getMaterial().getId());
+        Origin origin = new Origin();
+        origin.setId(watch.getOrigin().getId());
+        Brand brand = new Brand();
+        brand.setId(watch.getBrand().getId());
+        Style style = new Style();
+        style.setId(watch.getStyle().getId());
+        watch.setStyle(style);
+        watch.setBrand(brand);
+        watch.setOrigin(origin);
+        watch.setMaterial(material);
+        watch.setCore(core);
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

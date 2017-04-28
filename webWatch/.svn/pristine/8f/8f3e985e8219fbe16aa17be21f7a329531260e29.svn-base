@@ -1,0 +1,174 @@
+package com.watch.bean;
+
+/**
+ * Created by xiao-kang on 2017/3/20.
+ */
+public class Watch {
+    private int id;         // 手表ID
+    private double price;  //  手表价格
+    private String type;       //手表款式 ‘男’，‘女’
+    private int size;       //  手表大小
+    private String colour;      // 手表颜色
+    private String des;         // 手表描述
+    private String lens;        // 表镜材质
+    private String function;    // 手表功能
+    private String image;       // 手表图片
+    private String title;       // 标题
+    // 关联表
+    private Origin origin;           //  生产地
+    private Style style;           //   风格
+    private Material material;           //  材质
+    private Core core ;          //  机芯
+    private Brand brand;           //  品牌
+
+    private int brandId;
+
+    public int getBrandId() {
+        return brandId;
+    }
+
+    public void setBrandId(int brandId) {
+        this.brandId = brandId;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public int getSize() {
+        return size;
+    }
+
+    public void setSize(int size) {
+        this.size = size;
+    }
+
+    public String getColour() {
+        return colour;
+    }
+
+    public void setColour(String colour) {
+        this.colour = colour;
+    }
+
+    public String getDes() {
+        return des;
+    }
+
+    public void setDes(String des) {
+        this.des = des;
+    }
+
+    public String getLens() {
+        return lens;
+    }
+
+    public void setLens(String lens) {
+        this.lens = lens;
+    }
+
+    public String getFunction() {
+        return function;
+    }
+
+    public void setFunction(String function) {
+        this.function = function;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public Origin getOrigin() {
+        return origin;
+    }
+
+    public void setOrigin(Origin origin) {
+        this.origin = origin;
+    }
+
+    public Style getStyle() {
+        return style;
+    }
+
+    public void setStyle(Style style) {
+        this.style = style;
+    }
+
+    public Material getMaterial() {
+        return material;
+    }
+
+    public void setMaterial(Material material) {
+        this.material = material;
+    }
+
+    public Core getCore() {
+        return core;
+    }
+
+    public void setCore(Core core) {
+        this.core = core;
+    }
+
+    public Brand getBrand() {
+        return brand;
+    }
+
+    public void setBrand(Brand brand) {
+        this.brand = brand;
+    }
+
+    @Override
+    public String toString() {
+        return "Watch{" +
+                "id=" + id +
+                ", price=" + price +
+                ", type='" + type + '\'' +
+                ", size=" + size +
+                ", colour='" + colour + '\'' +
+                ", des='" + des + '\'' +
+                ", lens='" + lens + '\'' +
+                ", function='" + function + '\'' +
+                ", image='" + image + '\'' +
+                ", title='" + title + '\'' +
+                ", origin=" + origin +
+                ", style=" + style +
+                ", material=" + material +
+                ", core=" + core +
+                ", brand=" + brand +
+                '}';
+    }
+}

@@ -1,0 +1,44 @@
+package com.watch.controller;
+
+import com.watch.bean.Origin;
+import com.watch.common.bean.ComboBox4EasyUI;
+import com.watch.service.OriginService;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Created by xiao-kang on 2017/3/21.
+ */
+
+@Controller
+@RequestMapping("/origin")
+public class OriginController {
+
+    @Resource
+    private OriginService originService;
+
+
+    /*
+    * 下拉列表显示所有品牌
+    * */
+    @ResponseBody
+    @RequestMapping(value = "query_origin",method = RequestMethod.GET)
+    public List<ComboBox4EasyUI> origin(){
+        List<Origin> list = originService.queryAll();
+        List<ComboBox4EasyUI> request = new ArrayList<ComboBox4EasyUI>();
+        for(Origin origin: list){
+            ComboBox4EasyUI combox = new ComboBox4EasyUI();
+            combox.setId(String.valueOf(origin.getId()));
+            combox.setText(origin.getDes());
+            combox.setSelected(true);
+            request.add(combox);
+        }
+        return request;
+    }
+}

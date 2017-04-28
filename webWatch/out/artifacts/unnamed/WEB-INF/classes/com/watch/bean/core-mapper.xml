@@ -1,0 +1,44 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.watch.dao.CoreDAO">
+    <resultMap type="core" id="coreMap">
+        <id column="c_id" property="id"/>
+        <result column="c_des" property="des"/>
+    </resultMap>
+
+    <select id="queryAll" resultMap="coreMap">
+        select * from p_core
+    </select>
+
+
+    <select id="queryByPagerAndCriteria" resultMap="coreMap">
+        select * from p_core limit #{pager.beginIndex}, #{pager.pageSize}
+    </select>
+
+
+    <select id="countByCriteria" resultType="int" parameterType="core">
+        select count(c_id) from p_core where 1 = 1
+    </select>
+
+
+    <insert id="add" parameterType="core">
+        insert into p_core(c_des) values(#{des})
+    </insert>
+
+
+    <update id="update" parameterType="core">
+        update p_core set c_des = #{des}  where c_id = #{id}
+    </update>
+
+    <delete id="deleteByIds" parameterType="java.util.List">
+        delete from p_core where c_id in (
+        <foreach collection="list" item="ids"  separator=",">
+            #{ids}
+        </foreach>
+        )
+    </delete>
+
+
+</mapper>

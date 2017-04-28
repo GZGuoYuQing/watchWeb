@@ -1,0 +1,9 @@
+package com.watch.service;
+
+import com.watch.bean.Watch;
+
+/**
+ * Created by xiao-kang on 2017/3/21.
+ */
+public interface WatchService extends BaseService<Watch> {
+}

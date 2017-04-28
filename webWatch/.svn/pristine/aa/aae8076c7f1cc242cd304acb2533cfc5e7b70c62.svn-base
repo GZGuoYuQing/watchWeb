@@ -1,0 +1,10 @@
+package com.watch.dao;
+
+import com.watch.bean.Type;
+import org.springframework.stereotype.Repository;
+
+
+@Repository
+public interface TypeDAO extends BaseDAO<Type> {
+    public Type quryByDes(String des);
+}

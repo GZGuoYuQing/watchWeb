@@ -1,0 +1,25 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.watch.dao.BrandDAO">
+    <resultMap type="brand" id="brandMap">
+        <id column="b_id" property="id"/>
+        <result column="b_des" property="des"/>
+    </resultMap>
+
+    <select id="queryAll" resultMap="brandMap">
+        select * from p_brand
+    </select>
+
+    <select id="queryByDes" parameterType="String" resultMap="brandMap">
+        select * from p_brand where b_des = #{des}
+    </select>
+
+
+
+
+
+
+
+</mapper>

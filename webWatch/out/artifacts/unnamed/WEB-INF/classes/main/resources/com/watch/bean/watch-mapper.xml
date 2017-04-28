@@ -1,0 +1,243 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.watch.dao.WatchDAO">
+    <resultMap type="watch" id="watchMap">
+        <id column="w_id" property="id"/>
+        <result column="w_type" property="type"/>
+        <result column="w_price" property="price"/>
+        <result column="w_size" property="size"/>
+        <result column="w_colour" property="colour"/>
+        <result column="w_lens" property="lens"/>
+        <result column="w_function" property="function"/>
+        <result column="w_image" property="image"/>
+        <result column="w_title" property="title"/>
+        <result column="w_des" property="des"/>
+        <result column="w_table" property="table"/>
+        <result column="w_video" property="video"/>
+        <result column="w_image1" property="image1"/>
+        <result column="w_image2" property="image2"/>
+        <result column="w_image3" property="image3"/>
+        <result column="w_image4" property="image4"/>
+        <result column="w_image5" property="image5"/>
+        <result column="w_image6" property="image6"/>
+        <result column="w_image7" property="image7"/>
+        <result column="w_image8" property="image8"/>
+        <association property="origin" javaType="com.watch.bean.Origin">
+            <id column="o_id" property="id"/>
+            <result column="o_des" property="des"/>
+        </association>
+
+        <association property="style" javaType="com.watch.bean.Style">
+            <id column="s_id" property="id"/>
+            <result column="s_des" property="des"/>
+        </association>
+
+        <association property="material" javaType="com.watch.bean.Material">
+            <id column="m_id" property="id"/>
+            <result column="m_des" property="des"/>
+        </association>
+
+        <association property="core" javaType="com.watch.bean.Core">
+            <id column="c_id" property="id"/>
+            <result column="c_des" property="des"/>
+        </association>
+
+        <association property="brand" javaType="com.watch.bean.Brand">
+            <id column="b_id" property="id"/>
+            <result column="b_des" property="des"/>
+        </association>
+    </resultMap>
+
+    <select id="queryAll" resultMap="watchMap">
+        select * from p_watch
+    </select>
+
+    <select id="queryById" parameterType="int" resultMap="watchMap">
+        select * from p_watch w ,p_brand b ,p_core c ,p_material m ,p_origin o ,p_style s where w.b_id = b.b_id
+        and w.c_id = c.c_id and w.m_id = m.m_id and w.o_id = o.o_id and w.s_id = s.s_id and  w.w_id = #{id}
+    </select>
+
+    <insert id="add" parameterType="watch">
+        insert into p_watch(b_id, w_price,w_type,w_size,w_colour,w_des,m_id,w_lens,w_function,c_id,o_id,w_image,s_id,w_title,w_image1,w_image2,
+        w_image3,w_image4,w_image5,w_image6,w_image7,w_image8,w_table,w_video)
+        values(#{brand.id}, #{price},#{type},#{size},#{colour},#{des},#{material.id},#{lens},#{function},#{core.id},
+        #{origin.id},#{image},#{style.id},#{title},#{image1},#{image2},#{image3},#{image4},#{image5},#{image6},#{image7}
+        ,#{image8},#{table},#{video})
+    </insert>
+
+
+
+    <update id="update" parameterType="watch">
+        update p_watch set b_id = #{brand.id}, w_price = #{price},w_type = #{type},w_size = #{size},w_colour = #{colour},w_des = #{des},
+        m_id = #{material.id},w_lens = #{lens},w_function = #{function},c_id = #{core.id},o_id = #{origin.id},
+        s_id = #{style.id},w_title = #{title}
+        ,w_table = #{table},w_video = #{video} where w_id = #{id}
+    </update>
+
+    <update id = "updateImg" parameterType="watch">
+        update p_watch set w_image = #{image},w_image1 = #{image1},w_image2 = #{image2},w_image3 = #{image3} ,w_image4 = #{image4},w_image5 = #{image5},w_image6 = #{image6},w_image7 = #{image7},w_image8 = #{image8}
+        where w_id = #{id}
+    </update>
+
+    <delete id="deleteById" parameterType="int">
+        delete from p_watch where w_id = #{id}
+    </delete>
+
+    <select id="queryByPagerAndCriteria" resultMap="watchMap">
+        select * from p_watch w ,p_brand b ,p_core c ,p_material m ,p_origin o ,p_style s where w.b_id = b.b_id
+        and w.c_id = c.c_id and w.m_id = m.m_id and w.o_id = o.o_id and w.s_id = s.s_id
+        <if test="watch.brandId != null and watch.brandId != ''">
+            and w.b_id = #{watch.brandId}
+        </if>
+        <if test="watch.title != null and watch.title != ''">
+            and w.w_title like concat('%', #{watch.title}, '%')
+        </if>
+        order by w.w_id Desc limit #{pager.beginIndex}, #{pager.pageSize}
+    </select>
+
+    <select id="countByCriteria" resultType="int" parameterType="watch">
+        select count(w_id) from p_watch where 1 = 1
+        <if test="brandId != null and brandId != ''">
+            and b_id = #{brandId}
+        </if>
+        <if test="title != null and title != ''">
+            and w_title like concat('%', #{title}, '%')
+        </if>
+    </select>
+
+    <delete id="deleteByIds" parameterType="java.util.List">
+        delete from p_watch where w_id in (
+        <foreach collection="list" item="ids"  separator=",">
+            #{ids}
+        </foreach>
+        )
+
+    </delete>
+
+    <select id="queryBy12" parameterType="int" resultMap="watchMap">
+        select * from p_watch w ,p_style s where w.s_id = s.s_id
+        order by w.w_id Desc limit #{start},#{over}
+    </select>
+
+    <select id="queryByWatchDetails"  resultMap="watchMap">
+        select * from p_watch  w, p_style s where w.b_id in (select b_id from p_brand where b_des = #{styleDes} )
+        and w.w_type = #{type} and w.s_id = s.s_id order by w.w_id desc limit #{pager.beginIndex}, #{pager.pageSize}
+    </select>
+
+
+    <select id="count" resultType="int">
+        select count(w.w_id) from p_watch  w where w.b_id in (select b_id from p_brand where b_des = #{styleDes} ) and w.w_type = #{type}
+    </select>
+
+    <select id="queryByTitleDes" resultMap="watchMap">
+        select * from p_watch w  LEFT JOIN p_style s  on w.s_id = s.s_id where 1 = 1
+        <if test="watch.des != null and watch.des != ''">
+            and w.w_des like concat('%', #{watch.des}, '%')
+        </if>
+        <if test="watch.title != null and watch.title != ''">
+            or w.w_title  like concat('%', #{watch.title}, '%')
+        </if>
+        <if test="watch.function != null and watch.function != ''">
+            or w.w_function like concat('%', #{watch.function}, '%')
+        </if>
+        order by w.w_id Desc limit #{pager.beginIndex}, #{pager.pageSize}
+    </select>
+
+    <select id="countByTitleDes" resultType="int" parameterType="watch">
+        select count(w_id) from p_watch where 1 = 1
+        <if test="des != null and des != ''">
+            and w_des like concat('%', #{des}, '%')
+        </if>
+        <if test="title != null and title != ''">
+            or w_title like concat('%', #{title}, '%')
+        </if>
+        <if test="function != null and function != ''">
+            or w_function like concat('%', #{function}, '%')
+        </if>
+    </select>
+
+    <select id="queryByType"  resultMap="watchMap">
+        select * from p_watch  w, p_style s where  w.w_type = #{type} and w.s_id = s.s_id order by w.w_id desc limit #{pager.beginIndex}, #{pager.pageSize}
+    </select>
+
+
+    <select id="countByType" resultType="int">
+        select count(w.w_id) from p_watch  w where w.w_type = #{type}
+    </select>
+
+
+    <select id="queryByPrice"  resultMap="watchMap">
+        select * from p_watch w  LEFT JOIN p_brand b on w.b_id = b.b_id LEFT JOIN p_style s  on w.s_id = s.s_id where 1 = 1
+        <if test="watch.type != null and watch.type != ''">
+          and w.w_type = #{watch.type}
+        </if>
+        <if test="watch.brandId != null and watch.brandId != ''">
+            and w.b_id = #{watch.brandId}
+        </if>
+        <if test="watch.prices == 1">
+            and w.w_price <![CDATA[ <= 2000 ]]>
+        </if>
+        <if test="watch.prices == 2">
+            and w.w_price <![CDATA[ >= 2000 ]]> and  w.w_price <![CDATA[<= 3500 ]]>
+        </if>
+        <if test="watch.prices == 3">
+            and w.w_price <![CDATA[ >= 3500 ]]> and  w.w_price <![CDATA[<= 4500 ]]>
+        </if>
+        <if test="watch.prices == 4">
+            and w.w_price <![CDATA[ >= 4500 ]]> and  w.w_price <![CDATA[<= 5500 ]]>
+        </if>
+        <if test="watch.prices == 5">
+            and w.w_price <![CDATA[ >= 5500 ]]>
+        </if>
+        <if test="watch.prices == 6">
+        </if>
+        order by w.w_id Desc limit #{pager.beginIndex}, #{pager.pageSize}
+    </select>
+
+
+    <select id="countByPrice" resultType="int">
+        select count(w.w_id) from p_watch w  LEFT JOIN p_brand b on w.b_id = b.b_id LEFT JOIN p_style s  on w.s_id = s.s_id where 1 = 1
+        <if test="type != null and type != ''">
+            and w.w_type = #{type}
+        </if>
+        <if test="brandId != null and brandId != ''">
+            and w.b_id = #{brandId}
+        </if>
+        <if test="prices == 1">
+            and w.w_price <![CDATA[ <= 2000 ]]>
+        </if>
+        <if test="prices == 2">
+            and w.w_price <![CDATA[ >= 2000 ]]> and  w.w_price <![CDATA[<= 3500 ]]>
+        </if>
+        <if test="prices == 3">
+            and w.w_price <![CDATA[ >= 3500 ]]> and  w.w_price <![CDATA[<= 4500 ]]>
+        </if>
+        <if test="prices == 4">
+            and w.w_price <![CDATA[ >= 4500 ]]> and  w.w_price <![CDATA[<= 5500 ]]>
+        </if>
+        <if test="prices == 5">
+            and w.w_price <![CDATA[ >= 5500 ]]>
+        </if>
+        <if test="prices == 6">
+        </if>
+    </select>
+
+    <select id="queryByTable" resultMap="watchMap">
+        select * from p_watch w ,p_brand b ,p_core c ,p_material m ,p_origin o ,p_style s where w.b_id = b.b_id
+        and w.c_id = c.c_id and w.m_id = m.m_id and w.o_id = o.o_id and w.s_id = s.s_id and (w.w_table = '正品' or w.w_table = '原单' or w.w_table = '正品原单')
+        <if test="watch.brandId != null and watch.brandId != ''">
+            and w.b_id = #{watch.brandId}
+        </if>
+        order by w.w_id Desc limit #{pager.beginIndex}, #{pager.pageSize}
+    </select>
+
+
+    <select id="countByTable" resultType="int" parameterType="watch">
+        select count(w.w_id) from p_watch w where 1 = 1 and (w.w_table = '正品' or w.w_table = '原单' or w.w_table = '正品原单')
+        <if test="brandId != null and brandId != ''">
+            and w.b_id = #{brandId}
+        </if>
+    </select>
+</mapper>

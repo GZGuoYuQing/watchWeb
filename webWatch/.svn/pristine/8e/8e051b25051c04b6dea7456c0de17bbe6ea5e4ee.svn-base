@@ -1,0 +1,22 @@
+package com.watch.service;
+
+import com.watch.bean.Shose;
+import com.watch.bean.Watch;
+
+import java.util.List;
+
+/**
+ * Created by xiao-kang on 2017/4/11.
+ */
+public interface ShoseService extends BaseService<Shose> {
+
+    /*
+* 更新表图片
+* */
+    public void updateImg(Shose shose);
+
+    /*
+ * 批量删除
+ * */
+    public void deleteByIds(String id);
+}

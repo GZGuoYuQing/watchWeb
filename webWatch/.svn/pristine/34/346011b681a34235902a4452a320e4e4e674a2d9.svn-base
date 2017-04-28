@@ -1,0 +1,10 @@
+package com.watch.service;
+
+import com.watch.bean.Brand;
+
+/**
+ * Created by xiao-kang on 2017/3/21.
+ */
+public interface BrandService extends BaseService<Brand> {
+    public Brand queryByDes(String des);
+}

@@ -1,0 +1,13 @@
+package com.watch.service;
+
+import com.watch.bean.Watch;
+
+import java.util.List;
+
+/**
+ * Created by xiao-kang on 2017/3/21.
+ */
+public interface WatchService extends BaseService<Watch> {
+
+    public void deleteByIds(String id);
+}

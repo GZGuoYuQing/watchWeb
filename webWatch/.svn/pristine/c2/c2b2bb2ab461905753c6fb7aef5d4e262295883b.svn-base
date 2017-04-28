@@ -1,0 +1,55 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+    <mapper namespace="com.watch.dao.AdminDAO">
+        <resultMap type="admin" id="adminMap">
+            <id column="a_id" property="id"/>
+            <result column="a_account" property="account"/>
+            <result column="a_password" property="password"/>
+            <result column="a_name" property="name"/>
+            <result column="a_address" property="address"/>
+            <result column="a_phone" property="phone"/>
+
+        </resultMap>
+
+    <select id="queryAll" resultMap="adminMap">
+        select * from t_admin
+    </select>
+
+    <select id="Login" parameterType="admin" resultMap="adminMap">
+        select * from t_admin where a_account=#{account} and a_password = #{password}
+    </select>
+
+    <select id="queryByPagerAndCriteria" resultMap="adminMap">
+        select * from t_admin limit #{pager.beginIndex}, #{pager.pageSize}
+    </select>
+
+
+    <select id="countByCriteria" resultType="int" parameterType="admin">
+        select count(a_id) from t_admin where 1 = 1
+    </select>
+
+
+    <insert id="add" parameterType="admin">
+          insert into t_admin(a_account, a_password, a_name, a_address, a_phone)
+          values(#{account}, #{password},#{name}, #{address}, #{phone})
+    </insert>
+
+
+
+    <update id="update" parameterType="admin">
+        update t_admin set a_account = #{account}, a_password = #{password}, a_name = #{name}, a_address = #{address}, a_phone = #{phone}
+        where a_id = #{id}
+    </update>
+
+    <delete id="deleteByIds" parameterType="java.util.List">
+        delete from t_admin where a_id in (
+        <foreach collection="list" item="ids"  separator=",">
+            #{ids}
+        </foreach>
+        )
+    </delete>
+
+
+</mapper>

@@ -1,0 +1,49 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+    <mapper namespace="com.watch.dao.BrandDAO">
+        <resultMap type="brand" id="brandMap">
+            <id column="b_id" property="id"/>
+            <result column="b_des" property="des"/>
+        </resultMap>
+
+    <select id="queryAll" resultMap="brandMap">
+        select * from p_brand
+    </select>
+
+
+    <select id="queryByPagerAndCriteria" resultMap="brandMap">
+        select * from p_brand limit #{pager.beginIndex}, #{pager.pageSize}
+</select>
+
+
+    <select id="countByCriteria" resultType="int" parameterType="brand">
+        select count(b_id) from p_brand where 1 = 1
+    </select>
+
+
+    <insert id="add" parameterType="brand">
+          insert into p_brand(b_des) values(#{des})
+    </insert>
+
+
+
+    <update id="update" parameterType="brand">
+        update p_brand set b_des = #{des}  where b_id = #{id}
+    </update>
+
+    <delete id="deleteByIds" parameterType="java.util.List">
+        delete from p_brand where b_id in (
+        <foreach collection="list" item="ids"  separator=",">
+            #{ids}
+        </foreach>
+        )
+    </delete>
+
+    <select id="queryByDes" parameterType="String" resultMap="brandMap">
+        select * from p_brand where b_des = #{des}
+    </select>
+
+
+</mapper>

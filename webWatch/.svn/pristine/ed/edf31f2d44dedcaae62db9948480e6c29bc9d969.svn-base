@@ -1,0 +1,92 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.xk.dao.WatchDAO">
+    <resultMap type="watch" id="watchMap">
+        <id column="w_id" property="id"/>
+        <result column="w_type" property="type"/>
+        <result column="w_price" property="price"/>
+        <result column="w_size" property="size"/>
+        <result column="w_colour" property="colour"/>
+        <result column="w_lens" property="lens"/>
+        <result column="w_function" property="funtion"/>
+        <result column="w_image" property="image"/>
+        <result column="w_title" property="title"/>
+        <result column="w_des" property="des"/>
+
+        <association property="origin" javaType="com.watch.bean.Origin">
+            <id column="o_id" property="id"/>
+            <result column="o_des" property="des"/>
+        </association>
+
+        <association property="style" javaType="com.watch.bean.Style">
+            <id column="s_id" property="id"/>
+            <result column="s_des" property="des"/>
+        </association>
+
+        <association property="material" javaType="com.watch.bean.Material">
+            <id column="m_id" property="id"/>
+            <result column="m_des" property="des"/>
+        </association>
+
+        <association property="core" javaType="com.watch.bean.Core">
+            <id column="c_id" property="id"/>
+            <result column="c_des" property="des"/>
+        </association>
+
+        <association property="brand" javaType="com.watch.bean.Brand">
+            <id column="b_id" property="id"/>
+            <result column="b_des" property="des"/>
+        </association>
+    </resultMap>
+
+    <select id="queryAll" resultMap="watchMap">
+        select * from p_watch
+    </select>
+
+    <select id="queryById" parameterType="int" resultType="watch">
+        select * from p_watch where w_id = #{id}
+    </select>
+
+    <insert id="add" parameterType="watch">
+        insert into p_watch(b_id, w_price,w_type,w_size,w_colour,w_des,m_id,w_lens,w_function,c_id,o_id,w_image,s_id,w_title)
+        values(#{brand.id}, #{w_price},#{w_type},#{w_size},#{w_colour},#{des},#{material.id},#{w_lens},#{w_function},#{core.id},
+        #{origin.id},#{w_image},#{style.id},#{w_title})
+    </insert>
+
+
+
+    <update id="update" parameterType="watch">
+        update p_watch set w_price = #{price},w_type = #{type},w_size = #{size},w_colour = #{colour},w_des = #{des}
+        m_id = #{material.id},w_lens = #{lens},w_function = #{function},c_id = #{core.id},o_id = #{origin.id},
+        w_image = #{image},s_id = #{style.id},w_title = #{title} where w_id = #{id}
+    </update>
+
+    <delete id="deleteById" parameterType="int">
+        delete from p_watch where w_id = #{id}
+    </delete>
+
+    <select id="queryByPagerAndCriteria" resultMap="watchMap">
+        select * from p_watch w ,p_brand b ,p_core c ,p_material m ,p_origin o ,p_style s where w.b_id = b.b_id
+        and w.c_id = c.c_id and w.m_id = m.m_id and w.o_id = o.o_id and w.s_id = s.s_id
+        <!--<if test="watch.brand != null and watch.brand != ''">
+            and name like concat('%', #{watch.name}, '%')
+        </if>-->
+        <if test="watch.price != null and watch.price != ''">
+            and price = #{watch.price}
+        </if>
+        limit #{pager.beginIndex}, #{pager.pageSize}
+    </select>
+
+    <select id="countByCriteria" resultType="int" parameterType="watch">
+        select count(id) from p_watch where 1 = 1
+        <if test="name != null and name != ''">
+            and name like concat('%', #{name}, '%')
+        </if>
+        <if test="price != null and price != ''">
+            and price = #{price}
+        </if>
+    </select>
+
+</mapper>

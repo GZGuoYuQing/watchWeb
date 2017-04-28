@@ -1,0 +1,225 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.watch.dao.ShoseDAO">
+    <resultMap type="shose" id="shoseMap">
+        <id column="sh_id" property="id"/>
+        <result column="sh_type" property="type"/>
+        <result column="sh_price" property="price"/>
+        <result column="sh_image" property="image"/>
+        <result column="sh_title" property="title"/>
+        <result column="sh_des" property="des"/>
+        <result column="sh_table" property="table"/>
+        <result column="sh_video" property="video"/>
+        <result column="sh_image1" property="image1"/>
+        <result column="sh_image2" property="image2"/>
+        <result column="sh_image3" property="image3"/>
+        <result column="sh_image4" property="image4"/>
+        <result column="sh_image5" property="image5"/>
+        <result column="sh_image6" property="image6"/>
+        <result column="sh_image7" property="image7"/>
+        <result column="sh_image8" property="image8"/>
+        <association property="origin" javaType="com.watch.bean.Origin">
+            <id column="o_id" property="id"/>
+            <result column="o_des" property="des"/>
+        </association>
+
+        <association property="style" javaType="com.watch.bean.Style">
+            <id column="s_id" property="id"/>
+            <result column="s_des" property="des"/>
+        </association>
+
+        <association property="material" javaType="com.watch.bean.Material">
+            <id column="m_id" property="id"/>
+            <result column="m_des" property="des"/>
+        </association>
+
+
+        <association property="brand" javaType="com.watch.bean.Brand">
+            <id column="b_id" property="id"/>
+            <result column="b_des" property="des"/>
+        </association>
+    </resultMap>
+
+    <select id="queryAll" resultMap="shoseMap">
+        select * from t_shose
+    </select>
+
+    <select id="queryById" parameterType="int" resultMap="shoseMap">
+        select * from t_shose w ,p_brand b  ,p_material m ,p_origin o ,p_style s where w.b_id = b.b_id
+     and w.m_id = m.m_id and w.o_id = o.o_id and w.s_id = s.s_id and  w.sh_id = #{id}
+    </select>
+
+    <insert id="add" parameterType="shose">
+        insert into t_shose(b_id, sh_price,sh_type,sh_des,m_id,o_id,sh_image,s_id,sh_title,sh_image1,sh_image2,
+        sh_image3,sh_image4,sh_image5,sh_image6,sh_image7,sh_image8,sh_table,sh_video)
+        values(#{brand.id}, #{price},#{type},#{des},#{material.id},
+        #{origin.id},#{image},#{style.id},#{title},#{image1},#{image2},#{image3},#{image4},#{image5},#{image6},#{image7}
+        ,#{image8},#{table},#{video})
+    </insert>
+
+
+
+    <update id="update" parameterType="shose">
+        update t_shose set b_id = #{brand.id}, sh_price = #{price},sh_type = #{type},sh_des = #{des},
+        m_id = #{material.id},o_id = #{origin.id},
+        s_id = #{style.id},sh_title = #{title}
+        ,sh_table = #{table},sh_video = #{video} where sh_id = #{id}
+    </update>
+
+    <update id = "updateImg" parameterType="shose">
+        update t_shose set sh_image = #{image},sh_image1 = #{image1},sh_image2 = #{image2},sh_image3 = #{image3} ,sh_image4 = #{image4},sh_image5 = #{image5},sh_image6 = #{image6},sh_image7 = #{image7},sh_image8 = #{image8}
+        where sh_id = #{id}
+    </update>
+
+    <!--后台分页-->
+    <select id="queryByPagerAndCriteria" resultMap="shoseMap">
+        select * from t_shose w ,p_brand b ,p_material m ,p_origin o ,p_style s where w.b_id = b.b_id
+        and w.m_id = m.m_id and w.o_id = o.o_id and w.s_id = s.s_id
+        <if test="shose.brandId != null and shose.brandId != ''">
+            and w.b_id = #{shose.brandId}
+        </if>
+        <if test="shose.title != null and shose.title != ''">
+            and w.sh_title like concat('%', #{shose.title}, '%')
+        </if>
+        order by w.sh_id Desc limit #{pager.beginIndex}, #{pager.pageSize}
+    </select>
+
+    <select id="countByCriteria" resultType="int" parameterType="shose">
+        select count(sh_id) from t_shose where 1 = 1
+        <if test="brandId != null and brandId != ''">
+            and b_id = #{brandId}
+        </if>
+        <if test="title != null and title != ''">
+            and sh_title like concat('%', #{title}, '%')
+        </if>
+    </select>
+
+    <delete id="deleteByIds" parameterType="java.util.List">
+        delete from t_shose where sh_id in (
+        <foreach collection="list" item="ids"  separator=",">
+            #{ids}
+        </foreach>
+        )
+
+    </delete>
+
+    <select id="queryBy12" parameterType="int" resultMap="shoseMap">
+        select * from t_shose w ,p_style s where w.s_id = s.s_id
+        order by w.sh_id Desc limit #{start},#{over}
+    </select>
+
+    <select id="queryByshoseDetails"  resultMap="shoseMap">
+        select * from t_shose  w, p_style s where w.b_id in (select b_id from p_brand where b_des = #{styleDes} )
+        and w.sh_type = #{type} and w.s_id = s.s_id order by w.sh_id desc limit #{pager.beginIndex}, #{pager.pageSize}
+    </select>
+
+
+    <select id="count" resultType="int">
+        select count(w.sh_id) from t_shose  w where w.b_id in (select b_id from p_brand where b_des = #{styleDes} ) and w.sh_type = #{type}
+    </select>
+
+    <select id="queryByTitleDes" resultMap="shoseMap">
+        select * from t_shose w  LEFT JOIN p_style s  on w.s_id = s.s_id where 1 = 1
+        <if test="shose.des != null and shose.des != ''">
+            and w.sh_des like concat('%', #{shose.des}, '%')
+        </if>
+        <if test="shose.title != null and shose.title != ''">
+            or w.sh_title  like concat('%', #{shose.title}, '%')
+        </if>
+        <if test="shose.function != null and shose.function != ''">
+            or w.sh_function like concat('%', #{shose.function}, '%')
+        </if>
+        order by w.sh_id Desc limit #{pager.beginIndex}, #{pager.pageSize}
+    </select>
+
+    <select id="countByTitleDes" resultType="int" parameterType="shose">
+        select count(sh_id) from t_shose where 1 = 1
+        <if test="des != null and des != ''">
+            and sh_des like concat('%', #{des}, '%')
+        </if>
+        <if test="title != null and title != ''">
+            or sh_title like concat('%', #{title}, '%')
+        </if>
+        <if test="function != null and function != ''">
+            or sh_function like concat('%', #{function}, '%')
+        </if>
+    </select>
+
+
+
+    <select id="queryByPrice"  resultMap="shoseMap">
+        select * from t_shose w  LEFT JOIN p_brand b on w.b_id = b.b_id LEFT JOIN p_style s  on w.s_id = s.s_id where 1 = 1
+        <if test="shose.type != null and shose.type != ''">
+          and w.sh_type = #{shose.type}
+        </if>
+        <if test="shose.brandId != null and shose.brandId != ''">
+            and w.b_id = #{shose.brandId}
+        </if>
+        <if test="shose.prices == 1">
+            and w.sh_price <![CDATA[ <= 240 ]]>
+        </if>
+        <if test="shose.prices == 2">
+            and w.sh_price <![CDATA[ >= 240 ]]> and  w.sh_price <![CDATA[<= 350 ]]>
+        </if>
+        <if test="shose.prices == 3">
+            and w.sh_price <![CDATA[ >= 350 ]]> and  w.sh_price <![CDATA[<= 550 ]]>
+        </if>
+        <if test="shose.prices == 4">
+            and w.sh_price <![CDATA[ >= 550 ]]> and  w.sh_price <![CDATA[<= 950 ]]>
+        </if>
+        <if test="shose.prices == 5">
+            and w.sh_price <![CDATA[ >= 950 ]]>
+        </if>
+        <if test="shose.prices == 6">
+        </if>
+        order by w.sh_id Desc limit #{pager.beginIndex}, #{pager.pageSize}
+    </select>
+
+
+    <select id="countByPrice" resultType="int">
+        select count(w.sh_id) from t_shose w  LEFT JOIN p_brand b on w.b_id = b.b_id LEFT JOIN p_style s  on w.s_id = s.s_id where 1 = 1
+        <if test="type != null and type != ''">
+            and w.sh_type = #{type}
+        </if>
+        <if test="brandId != null and brandId != ''">
+            and w.b_id = #{brandId}
+        </if>
+        <if test="prices == 1">
+            and w.sh_price <![CDATA[ <= 240 ]]>
+        </if>
+        <if test="prices == 2">
+            and w.sh_price <![CDATA[ >= 240 ]]> and  w.sh_price <![CDATA[<= 350 ]]>
+        </if>
+        <if test="prices == 3">
+            and w.sh_price <![CDATA[ >= 350 ]]> and  w.sh_price <![CDATA[<= 550 ]]>
+        </if>
+        <if test="prices == 4">
+            and w.sh_price <![CDATA[ >= 550 ]]> and  w.sh_price <![CDATA[<= 950 ]]>
+        </if>
+        <if test="prices == 5">
+            and w.sh_price <![CDATA[ >= 950 ]]>
+        </if>
+        <if test="prices == 6">
+        </if>
+    </select>
+
+    <!--前台页面根据品牌显示-->
+    <select id="queryByBrand" resultMap="shoseMap">
+        select * from t_shose w ,p_brand b ,p_material m ,p_origin o ,p_style s where w.b_id = b.b_id
+        and w.m_id = m.m_id and w.o_id = o.o_id and w.s_id = s.s_id
+        <if test="shose.brandId != null and shose.brandId != ''">
+            and w.b_id = #{shose.brandId}
+        </if>
+        order by w.sh_id Desc limit #{pager.beginIndex}, #{pager.pageSize}
+    </select>
+
+
+    <select id="countByBrand" resultType="int" parameterType="shose">
+        select count(w.sh_id) from t_shose w where 1 = 1
+        <if test="brandId != null and brandId != ''">
+            and w.b_id = #{brandId}
+        </if>
+    </select>
+</mapper>

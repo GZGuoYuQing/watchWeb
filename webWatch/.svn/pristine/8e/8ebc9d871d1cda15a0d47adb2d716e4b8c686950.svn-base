@@ -1,0 +1,20 @@
+package com.watch.service;
+
+import com.watch.bean.Watch;
+import com.watch.common.bean.Pager;
+
+import java.util.List;
+
+/**
+ * Created by xiao-kang on 2017/3/21.
+ */
+public interface WatchService extends BaseService<Watch> {
+
+    public void deleteByIds(String id);
+
+    public List<Watch> queryBy12(int start , int over);
+
+    public List<Watch> queryByWatchDetails(Pager pager, String typeDes, String type);
+
+    public int count(String typeDes, String type);
+}

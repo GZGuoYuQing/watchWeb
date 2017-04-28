@@ -1,0 +1,21 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.watch.dao.OriginDAO">
+    <resultMap type="origin" id="originMap">
+        <id column="o_id" property="id"/>
+        <result column="o_des" property="des"/>
+    </resultMap>
+
+    <select id="queryAll" resultMap="originMap">
+        select * from p_origin
+    </select>
+
+
+
+
+
+
+
+</mapper>

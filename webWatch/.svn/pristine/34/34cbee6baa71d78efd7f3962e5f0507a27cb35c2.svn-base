@@ -1,0 +1,297 @@
+<%@ page language="java" contentType="text/html; charset=utf-8"
+         pageEncoding="utf-8"%>
+<%
+    String path = request.getContextPath();
+%>
+<!DOCTYPE>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Insert title here</title>
+
+    <link rel = "stylesheet" href = "<%=path %>/jquery-easyui/themes/default/easyui.css"/>
+    <link rel = "stylesheet" href = "<%=path %>/jquery-easyui/themes/icon.css"/>
+    <link rel = "stylesheet" href = "<%=path %>/css/main.css"/>
+    <script type = "text/javascript" src = "<%=path %>/js/jquery.min.js"></script>
+    <script type = "text/javascript" src = "<%=path %>/jquery-easyui/jquery.min.js"></script>
+    <script type ="text/javascript" src="<%=path %>/js/jquery-form.js"></script>
+    <script type = "text/javascript" src = "<%=path %>/jquery-easyui/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="<%=path %>/jquery-easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script type = "text/javascript" src = "<%=path %>/js/json2.js"></script>
+    <script type = "text/javascript" src = "<%=path %>/js/main.js"></script>
+    <script type = "text/javascript" src = "<%=path %>/js/watch.js"></script>
+
+    <script>
+        $(function() {
+            setPagination("list");
+            $.get("/brand/query_brand",
+                    function(data){
+                        $("#brand").combobox("loadData", data);
+                    }, "json");
+        });
+
+    </script>
+    <style>
+        .table tr{
+            height: 43px;
+        }
+        .table td{
+            width: 260px;
+        }
+
+    </style>
+</head>
+<body id = "body">
+<table id = "list"class="easyui-datagrid"
+       data-options="toolbar:'#tb',singleSelect:false,
+			collapsible:true,
+			url:'<%=path %>/watch/query_pager',
+			method:'get',
+			rownumbers:true,
+			autoRowHeight:true,
+			pagination:true,
+			pageSize:20"
+       style = "height:100%;"
+>
+    <thead>
+    <tr>
+        <th data-options="field:'id',checkbox:true"></th>
+        <th data-options="field:'brand',width:80,align:'center'" formatter="showDes">品牌</th>
+        <th data-options="field:'price',width:80,align:'center'">价格</th>
+        <th data-options="field:'type',width:80,align:'center'">款式</th>
+        <th data-options="field:'size',width:80,align:'center'">大小</th>
+        <th data-options="field:'colour',width:80,align:'center'">颜色</th>
+        <th data-options="field:'title',width:80,align:'center'">标题</th>
+        <th data-options="field:'material',width:80,align:'center'" formatter="showDes">材质</th>
+        <th data-options="field:'function',width:80,align:'center'">功能</th>
+        <th data-options="field:'core',width:80,align:'center'" formatter="showDes">机芯</th>
+        <th data-options="field:'origin',width:80,align:'center'" formatter="showDes">生产地</th>
+        <th data-options="field:'style',width:80,align:'center'" formatter="showDes">风格</th>
+        <th data-options="field:'des',width:80,align:'center'">描述</th>
+        <th data-options="field:'caozuo',width:80,align:'center'" formatter="formatterOpt">操作</th>
+    </tr>
+    </thead>
+</table>
+<div id="tb" style="padding:5px;height:auto">
+    <div style="margin-bottom:5px">
+        <a href="javascript:;" onclick = "showAddWatchWin()"class="easyui-linkbutton" iconCls="icon-add" >添加</a>
+        <a href="javascript:;" onclick = "showEditWatchWin()" class="easyui-linkbutton" iconCls="icon-edit">编辑</a>
+        <a href="javascript:;" onclick = "removeWatch()"class="easyui-linkbutton" iconCls="icon-remove">删除</a>
+    </div>
+    <div>
+        品牌: <input id="brand" class="easyui-combobox" data-options="
+						valueField:'id',
+						textField:'text',
+						panelHeight:'200px' "/>
+        标题: <input class="easyui-textbox" id = "title" style="width:80px">
+        <a href="javascript:;" class="easyui-linkbutton" onclick="queryByTitle()" iconCls="icon-search">搜索</a>
+        <a href="javascript:;" class="easyui-linkbutton" onclick="queryByPage()" iconCls="icon-search">查询所有</a>
+    </div>
+</div>
+
+<div id="addWin" class="easyui-window" title="添加产品" data-options="closed:true" data-options="iconCls:'icon-save'" style="width:650px;height:500px;padding:5px;">
+    <form id = "addForm"   modelAttribute="watch" enctype="multipart/form-data">
+        <table class = "table">
+            <tr>
+                <td>品牌</td>
+                <td>
+                    <input id="addBrand" class="easyui-combobox" name="brand.id" data-options="required:true,
+						valueField:'id',
+						textField:'text',
+						panelHeight:'200px'"/>
+
+                </td>
+
+                <td>价格</td>
+                <td><input class="easyui-numberbox" name="price" data-options = "precision:2,required:true" /></td>
+            </tr>
+            <tr>
+                <td>款式</td>
+                <td>
+                    <input type = "radio"  name="type" value= "男款"/>男款
+                    <input type = "radio"  name="type" value= "女款"/>女款
+                </td>
+
+                <td>大小</td>
+                <td><input class="easyui-numberbox" name="size" data-options = "required:true" /></td>
+
+            </tr>
+            <tr>
+                <td>颜色</td>
+                <td><input class="easyui-validatebox textbox" name="colour"   data-options = "required:true" /></td>
+                <td>材质</td>
+                <td>
+                    <input id="addMaterial" class="easyui-combobox" name="material.id" data-options="required:true,
+						valueField:'id',
+						textField:'text',
+						panelHeight:'200px'"/>
+
+                </td>
+            </tr>
+            <tr>
+                <td>表镜材质</td>
+                <td><input class="easyui-validatebox textbox" name="lens"   data-options = "required:true" /></td>
+
+                <td>手表功能</td>
+                <td><input class="easyui-validatebox textbox" name="function"  data-options = "required:true"  /></td>
+            </tr>
+            <tr>
+                <td>机芯</td>
+                <td>
+                    <input id="addCore" class="easyui-combobox" name="core.id" data-options="required:true,
+						valueField:'id',
+						textField:'text',
+						panelHeight:'200px'"/>
+
+                </td>
+                <td>生产地</td>
+                <td>
+                    <input id="addOrigin" class="easyui-combobox" name="origin.id" data-options="required:true,
+						valueField:'id',
+						textField:'text',
+						panelHeight:'200px' "/>
+
+                </td>
+            </tr>
+
+            <tr>
+                <td>风格</td>
+                <td>
+                    <input id="addStyle" class="easyui-combobox" name="style.id" data-options="required:true,
+						valueField:'id',
+						textField:'text',
+						panelHeight:'200px'"/>
+
+                </td>
+
+                <td>标题</td>
+                <td><input class="easyui-validatebox textbox" name="title" /></td>
+            </tr>
+
+            <tr>
+
+                <td>图片</td>
+                <td>
+                    <input name="file" class="easyui-validatebox easyui-filebox" data-options="prompt:'请选择文件',buttonText:'选择文件'"
+                           data-options="required:true,novalidate:true"/>
+                </td>
+            </tr>
+            <tr>
+                <td>描述</td>
+                <td><input class="easyui-validatebox textbox" name="des"  style = "height:50px;width:100%"/></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="javascript:;"onclick="addWatch();"class="easyui-linkbutton" data-options="iconCls:'icon-add'">确认</a>
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>
+
+<div id="editWin" class="easyui-window" title="修改产品" data-options="closed:true" data-options="iconCls:'icon-save'" style="width:650px;height:520px;padding:5px;">
+    <form id = "editForm" modelAttribute="watch" enctype="multipart/form-data">
+        <input type="hidden" name="id" />
+        <input type="hidden" name="image"/>
+        <table class = "table">
+            <tr>
+                <td>品牌</td>
+                <td>
+                    <input id="editBrand" class="easyui-combobox" name="brand.id" data-options="required:true,
+						valueField:'id',
+						textField:'text',
+						panelHeight:'200px' "/>
+
+                </td>
+
+                <td>价格</td>
+                <td><input class="easyui-numberbox" name="price" data-options = "precision:2,required:true" /></td>
+            </tr>
+            <tr>
+                <td>款式</td>
+                <td>
+                    <input type = "radio"  name="type" value= "男款"/>男款
+                    <input type = "radio"  name="type" value= "女款"/>女款
+                </td>
+
+                <td>大小</td>
+                <td><input class="easyui-numberbox" name="size" data-options = "required:true" /></td>
+
+            </tr>
+            <tr>
+                <td>颜色</td>
+                <td><input class="easyui-validatebox textbox" name="colour"   data-options = "required:true" /></td>
+                <td>材质</td>
+                <td>
+                    <input id="editMaterial" class="easyui-combobox" name="material.id" data-options="required:true,
+						valueField:'id',
+						textField:'text',
+						panelHeight:'200px' "/>
+
+                </td>
+            </tr>
+            <tr>
+                <td>表镜材质</td>
+                <td><input class="easyui-validatebox textbox" name="lens"   data-options = "required:true" /></td>
+
+                <td>手表功能</td>
+                <td><input class="easyui-validatebox textbox" name="function"  data-options = "required:true"  /></td>
+            </tr>
+            <tr>
+                <td>机芯</td>
+                <td>
+                    <input id="editCore" class="easyui-combobox" name="core.id" data-options="required:true,
+						valueField:'id',
+						textField:'text',
+						panelHeight:'200px' "/>
+
+                </td>
+                <td>生产地</td>
+                <td>
+                    <input id="editOrigin" class="easyui-combobox" name="origin.id" data-options="required:true,
+						valueField:'id',
+						textField:'text',
+						panelHeight:'200px' "/>
+
+                </td>
+            </tr>
+
+            <tr>
+                <td>风格</td>
+                <td>
+                    <input id="editStyle" class="easyui-combobox" name="style.id" data-options="required:true,
+						valueField:'id',
+						textField:'text',
+						panelHeight:'200px'
+						"/>
+
+                </td>
+
+                <td>标题</td>
+                <td><input class="easyui-validatebox textbox" name="title" /></td>
+            </tr>
+
+            <tr>
+                <td></td>
+                <td><img style = "width:160px;height:70px;" id = "img" src=""></td>
+                <td>图片</td>
+                <td>
+                    <input name="file" class="easyui-validatebox easyui-filebox" data-options="prompt:'请选择文件',buttonText:'选择文件'"
+                           data-options="required:true,novalidate:true"/>
+                </td>
+            </tr>
+            <tr>
+                <td>描述</td>
+                <td><input class="easyui-validatebox textbox" name="des"  style = "height:50px;width:100%"/></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="javascript:;" onclick="editWatch();"class="easyui-linkbutton" data-options="iconCls:'icon-add'">确认</a>
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>
+</body>
+
+</html>
